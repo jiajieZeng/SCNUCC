@@ -1,0 +1,49 @@
+# 设置 CMake 最低版本要求
+cmake_minimum_required(VERSION 2.8)
+
+# 设置 C++ 标准
+set(CMAKE_CXX_STANDARD 17)
+
+# 将前端的代码编译成静态库
+file(GLOB_RECURSE ANTLR4_RUNTIME ${CMAKE_SOURCE_DIR}/dependencies/antlr4-runtime/*.cpp)
+file(GLOB FRONTEND_SRC "src/*.cpp")
+# file(GLOB FRONTEND_SRC "src/*.c")
+message(STATUS "FRONTEND: ${FRONTEND_SRC}")
+
+# 添加 Antlr 的头文件路径
+find_path(ANTLR4_INCLUDE_DIR NAMES antlr4-runtime.h PATHS ${CMAKE_SOURCE_DIR}/dependencies/antlr4-runtime)
+
+message(STATUS "ANTLR4_INCLUDE_DIR: ${ANTLR4_INCLUDE_DIR}")
+
+# 检查是否找到 Antlr 的头文件
+if (ANTLR4_INCLUDE_DIR)
+    message(STATUS "Found Antlr4: ${ANTLR4_INCLUDE_DIR}")
+else ()
+    message(FATAL_ERROR "Antlr4 not found")
+endif ()
+
+# 设置公共的头文件路径
+set(COMMON_INCLUDES include ${ANTLR4_INCLUDE_DIR})
+
+add_library(antlr STATIC ${ANTLR4_RUNTIME})
+
+
+# 编译前端静态库
+add_library(frontend STATIC ${FRONTEND_SRC})
+target_link_libraries(frontend antlr)
+
+# 同时生成一个 gen_ir 可执行文件
+add_executable(gen_ir gen_ir.cpp)
+target_link_libraries(gen_ir frontend)
+
+
+# 添加头文件路径
+target_include_directories(gen_ir PUBLIC ${COMMON_INCLUDES})
+target_include_directories(frontend PUBLIC ${COMMON_INCLUDES})
+target_include_directories(antlr PUBLIC ${COMMON_INCLUDES})
+
+# 设置 Debug 模式下的编译选项
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g")
+
+# 确保生成带有调试信息的目标文件
+set(CMAKE_BUILD_TYPE Debug)

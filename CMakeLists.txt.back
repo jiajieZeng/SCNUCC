@@ -1,0 +1,22 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+
+if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
+# 加载cmake中函数和变量
+include(cmake/utils.cmake)
+
+project(SCNUcc LANGUAGES CXX C)
+
+add_subdirectory(frontend)
+
+add_library(sysYarm STATIC test_cases/lib/sylib.c)
+
+#add_executable(test test.cpp)
+#add_subdirectory(midend)
+add_subdirectory(backend)
+
+#add_executable(compiler Compiler.cpp)
+
+#target_link_libraries(compiler frontend midend backend)

@@ -1,0 +1,10 @@
+# file(GLOB BACKEND_SRC "src/*.cpp")
+message(STATUS "BACKEND: ${BACKEND_SRC}")
+
+add_library(backend STATIC ${BACKEND_SRC})
+
+add_executable(compiler compiler.cpp)
+
+target_include_directories(backend PUBLIC include)
+target_link_libraries(backend frontend)
+target_link_libraries(compiler backend)
