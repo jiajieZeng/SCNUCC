@@ -20,6 +20,6 @@
 * C++17
 
 ## 文件
-* `main`在compiler.cpp
-* 输出RISCV汇编：compiler.exe -S -o outputfile.s inputfile.sy
-* 输出LLVM IR：compiler.exe -ll -o outputfile.ll inputfile.sy
+* `main`在`compiler.cpp`
+* 输出RISCV汇编：`compiler.exe -S -o outputfile.s inputfile.sy`
+* 输出LLVM IR：`compiler.exe -ll -o outputfile.ll inputfile.sy`
